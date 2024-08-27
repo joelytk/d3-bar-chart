@@ -67,9 +67,30 @@ body {
 #tooltip {
   position: absolute;
   pointer-events: none;
-  background-color: rgba(255, 255, 255, 0.7);
+  background-color: rgba(255, 255, 255, 0.85);
   color: #121212;
   transition: opacity 0.3s;
   padding: 0.25rem;
   border-radius: 0.25rem;
+}
+
+#tooltip:after {
+  content: '';
+  position: absolute;
+  border-width: 5px;
+  border-style: solid;
+}
+
+.tooltip-top:after {
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-color: rgba(255, 255, 255, 0.85) transparent transparent transparent;
+}
+
+.tooltip-left:after {
+  top: 50%;
+  left: 100%;
+  margin-top: -5px;
+  border-color: transparent transparent transparent rgba(255, 255, 255, 0.85);
 }

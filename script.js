@@ -94,12 +94,24 @@ const createBarChart = data => {
     .attr('data-gdp', d => d[1])
     .on('mouseover', e => {
       const [date, value] = e.target.__data__;
+      const post2007 = getYear(date) >= 2007;
 
       tooltip
         .style('opacity', 1)
-        .style('top', `${window.event.pageY}px`)
-        .style('left', `${window.event.pageX}px`)
-        .style('transform', 'translate(-50%, -100%)')
+        .style(
+          'top',
+          `${post2007 ? window.event.pageY : window.event.pageY - 5}px`
+        )
+        .style(
+          'left',
+          `${post2007 ? window.event.pageX - 5 : window.event.pageX}px`
+        )
+        .style('width', 'max-content')
+        .style(
+          'transform',
+          post2007 ? 'translate(-100%, -50%)' : 'translate(-50%, -100%)'
+        )
+        .attr('class', post2007 ? 'tooltip-left' : 'tooltip-top')
         .attr('data-date', date).html(`
           <span>${getQuarter(date)} ${getYear(date)}</span>
           <br />
