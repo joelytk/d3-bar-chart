@@ -42,13 +42,12 @@ body {
   gap: 2rem;
 }
 
-.bar-chart-container {
-  margin: 0 auto;
+#bar-chart-container {
   overflow-x: auto;
-  /* border: 1px solid #fff; */
+  text-align: center;
 }
 
-.bar {
+.bar:nth-child(3n - 1) {
   fill: #fff;
 }
 
@@ -60,7 +59,12 @@ body {
   fill: #032d61;
 }
 
-.bar:hover {
+.bar:nth-child(3n - 1):hover {
+  fill: #aaa;
+}
+
+.bar:nth-child(3n + 4):hover,
+.bar:nth-child(3n):hover {
   filter: brightness(150%);
 }
 

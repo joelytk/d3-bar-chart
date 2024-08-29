@@ -1,19 +1,14 @@
 const projectName = 'bar-chart';
 
+// Set margin, width and height of svg
+const margin = {
+  top: 40,
+  right: 54,
+  bottom: 30,
+  left: 54
+};
 const width = 800;
 const height = 400;
-
-const fetchData = async () => {
-  try {
-    const res = await fetch(
-      'https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/GDP-data.json'
-    );
-    const data = await res.json();
-    createBarChart(data);
-  } catch (error) {
-    console.error({ error });
-  }
-};
 
 const createBarChart = data => {
   const { data: dataset, from_date, to_date } = data;
@@ -27,9 +22,12 @@ const createBarChart = data => {
   // Initialize the x and y scales
   const xScale = d3.scaleTime(
     [new Date(from_date), new Date(to_date)],
-    [0, width]
+    [0, width - margin.left - margin.right]
   );
-  const yScale = d3.scaleLinear([0, d3.max(dataset, d => d[1])], [height, 0]);
+  const yScale = d3.scaleLinear(
+    [0, d3.max(dataset, d => d[1])],
+    [height - margin.top - margin.bottom, 0]
+  );
 
   // Initialize the x and y axes
   const xAxis = d3.axisBottom(xScale);
@@ -37,14 +35,14 @@ const createBarChart = data => {
 
   // Create the SVG element
   const svg = d3
-    .select('.bar-chart-container')
+    .select('#bar-chart-container')
     .append('svg')
-    .attr('width', width + 100)
-    .attr('height', height + 60);
+    .attr('width', width)
+    .attr('height', height);
 
   // Create the tooltip
   const tooltip = d3
-    .select('.bar-chart-container')
+    .select('#bar-chart-container')
     .append('div')
     .attr('id', 'tooltip')
     .style('opacity', 0);
@@ -53,8 +51,8 @@ const createBarChart = data => {
   svg
     .append('text')
     .attr('id', 'x-axis-label')
-    .attr('x', 485)
-    .attr('y', 453)
+    .attr('x', width - margin.right + 26)
+    .attr('y', height - margin.bottom + 4)
     .attr('fill', '#fff')
     .attr('font-size', '0.8rem')
     .attr('text-anchor', 'middle')
@@ -62,8 +60,8 @@ const createBarChart = data => {
   svg
     .append('text')
     .attr('id', 'y-axis-label')
-    .attr('x', 20)
-    .attr('y', 230)
+    .attr('x', margin.left)
+    .attr('y', margin.top - 16)
     .attr('fill', '#fff')
     .attr('font-size', '0.8rem')
     .attr('text-anchor', 'middle')
@@ -71,12 +69,12 @@ const createBarChart = data => {
   svg
     .append('g')
     .attr('id', 'x-axis')
-    .attr('transform', `translate(80, 420)`)
+    .attr('transform', `translate(${margin.left}, ${height - margin.bottom})`)
     .call(xAxis);
   svg
     .append('g')
     .attr('id', 'y-axis')
-    .attr('transform', `translate(80, 20)`)
+    .attr('transform', `translate(${margin.left}, ${margin.top})`)
     .call(yAxis);
 
   // Create the bars, then add class and titles
@@ -85,10 +83,10 @@ const createBarChart = data => {
     .data(dataset)
     .enter()
     .append('rect')
-    .attr('x', d => xScale(new Date(d[0])) + 80)
-    .attr('y', d => yScale(d[1]) + 20)
+    .attr('x', d => xScale(new Date(d[0])) + margin.left)
+    .attr('y', d => yScale(d[1]) + margin.top)
     .attr('width', barWidth)
-    .attr('height', d => height - yScale(d[1]))
+    .attr('height', d => height - margin.top - margin.bottom - yScale(d[1]))
     .attr('class', 'bar')
     .attr('data-date', d => d[0])
     .attr('data-gdp', d => d[1])
@@ -121,6 +119,18 @@ const createBarChart = data => {
     .on('mouseout', () => {
       tooltip.style('opacity', 0);
     });
+};
+
+const fetchData = async () => {
+  try {
+    const res = await fetch(
+      'https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/GDP-data.json'
+    );
+    const data = await res.json();
+    createBarChart(data);
+  } catch (error) {
+    console.error({ error });
+  }
 };
 
 fetchData();
