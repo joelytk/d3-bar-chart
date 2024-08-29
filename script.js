@@ -65,7 +65,7 @@ const createBarChart = data => {
     .attr('fill', '#fff')
     .attr('font-size', '0.8rem')
     .attr('text-anchor', 'middle')
-    .text('GDP');
+    .text('GDP (in $ billions)');
   svg
     .append('g')
     .attr('id', 'x-axis')
@@ -90,8 +90,8 @@ const createBarChart = data => {
     .attr('class', 'bar')
     .attr('data-date', d => d[0])
     .attr('data-gdp', d => d[1])
-    .on('mouseover', e => {
-      const [date, value] = e.target.__data__;
+    .on('mouseover', (_, d) => {
+      const [date, value] = d;
       const post2007 = getYear(date) >= 2007;
 
       tooltip
